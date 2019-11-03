@@ -7,7 +7,10 @@ package View;
 
 import Controller.ControllerCadastro;
 import Controller.ControllerConexao;
+import Controller.ControllerEANReader;
 import java.awt.EventQueue;
+import java.awt.event.KeyEvent;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -16,6 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;;
 import javax.swing.JTextArea;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -26,6 +30,7 @@ import javax.swing.JTextField;
 public class ViewPrincipal extends javax.swing.JFrame {
     //Formatando a hora no sistema
     private static final DateFormat FORMATO = new SimpleDateFormat("HH:mm:ss");
+    private String apiToken;
     /**
      * Creates new form ViewPrincipal
      */
@@ -107,6 +112,16 @@ public class ViewPrincipal extends javax.swing.JFrame {
 
     public JTextField getFieldPorta() {
         return fieldPorta;
+    }
+    
+    //Getter do token da api de busca
+
+    public void setApiToken(String apiToken) {
+        this.apiToken = apiToken;
+    }
+
+    public String getApiToken() {
+        return apiToken;
     }
     
     //Getters gerais da view
@@ -271,9 +286,10 @@ public class ViewPrincipal extends javax.swing.JFrame {
         btnCadastro = new javax.swing.JButton();
         btnAltera = new javax.swing.JButton();
         btnExcluir = new javax.swing.JButton();
+        btnHide = new javax.swing.JButton();
 
         dialogRestaurar.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        dialogRestaurar.setTitle("RESTAURAR JOGOS");
+        dialogRestaurar.setTitle("RESTAURAR LIVROS");
         dialogRestaurar.setBackground(new java.awt.Color(255, 255, 255));
         dialogRestaurar.setMinimumSize(new java.awt.Dimension(640, 640));
         dialogRestaurar.setResizable(false);
@@ -286,13 +302,13 @@ public class ViewPrincipal extends javax.swing.JFrame {
 
         jLabel2.setBackground(new java.awt.Color(255, 255, 255));
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(212, 14, 30));
+        jLabel2.setForeground(new java.awt.Color(133, 108, 76));
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setText("RESTAURAR LIVROS");
 
-        jButton1.setBackground(new java.awt.Color(212, 14, 30));
+        jButton1.setBackground(new java.awt.Color(133, 108, 76));
         jButton1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(246, 180, 14));
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("VOLTAR");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -300,9 +316,9 @@ public class ViewPrincipal extends javax.swing.JFrame {
             }
         });
 
-        btnRestaurarJogo.setBackground(new java.awt.Color(212, 14, 30));
+        btnRestaurarJogo.setBackground(new java.awt.Color(133, 108, 76));
         btnRestaurarJogo.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        btnRestaurarJogo.setForeground(new java.awt.Color(246, 180, 14));
+        btnRestaurarJogo.setForeground(new java.awt.Color(255, 255, 255));
         btnRestaurarJogo.setText("RESTAURAR");
         btnRestaurarJogo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -310,8 +326,8 @@ public class ViewPrincipal extends javax.swing.JFrame {
             }
         });
 
-        tabelaLivrosExcluidos.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        tabelaLivrosExcluidos.setForeground(new java.awt.Color(246, 180, 14));
+        tabelaLivrosExcluidos.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        tabelaLivrosExcluidos.setForeground(new java.awt.Color(133, 108, 76));
         tabelaLivrosExcluidos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -335,9 +351,9 @@ public class ViewPrincipal extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        tabelaLivrosExcluidos.setGridColor(new java.awt.Color(246, 180, 14));
+        tabelaLivrosExcluidos.setGridColor(new java.awt.Color(133, 108, 76));
         tabelaLivrosExcluidos.setRowHeight(20);
-        tabelaLivrosExcluidos.setSelectionBackground(new java.awt.Color(212, 14, 30));
+        tabelaLivrosExcluidos.setSelectionBackground(new java.awt.Color(133, 108, 76));
         tabelaLivrosExcluidos.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tabelaLivrosExcluidos.getTableHeader().setReorderingAllowed(false);
         jScrollPane3.setViewportView(tabelaLivrosExcluidos);
@@ -349,6 +365,7 @@ public class ViewPrincipal extends javax.swing.JFrame {
             tabelaLivrosExcluidos.getColumnModel().getColumn(3).setResizable(false);
             tabelaLivrosExcluidos.getColumnModel().getColumn(4).setResizable(false);
         }
+        tabelaLivrosExcluidos.setSelectionForeground(new java.awt.Color(255,255,255));
 
         javax.swing.GroupLayout panelRestaurarLayout = new javax.swing.GroupLayout(panelRestaurar);
         panelRestaurar.setLayout(panelRestaurarLayout);
@@ -410,8 +427,8 @@ public class ViewPrincipal extends javax.swing.JFrame {
         panelConexao.setBackground(new java.awt.Color(255, 255, 255));
 
         fieldIP.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        fieldIP.setForeground(new java.awt.Color(212, 14, 30));
-        fieldIP.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(212, 14, 30), 2, true), "IP *", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11), new java.awt.Color(212, 14, 30))); // NOI18N
+        fieldIP.setForeground(new java.awt.Color(83, 65, 43));
+        fieldIP.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(83, 65, 43), 2, true), "IP *", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11), new java.awt.Color(83, 65, 43))); // NOI18N
         fieldIP.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 fieldIPActionPerformed(evt);
@@ -419,8 +436,8 @@ public class ViewPrincipal extends javax.swing.JFrame {
         });
 
         fieldPorta.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        fieldPorta.setForeground(new java.awt.Color(212, 14, 30));
-        fieldPorta.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(212, 14, 30), 2, true), "PORTA *", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11), new java.awt.Color(212, 14, 30))); // NOI18N
+        fieldPorta.setForeground(new java.awt.Color(83, 65, 43));
+        fieldPorta.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(83, 65, 43), 2, true), "PORTA *", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11), new java.awt.Color(83, 65, 43))); // NOI18N
         fieldPorta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 fieldPortaActionPerformed(evt);
@@ -428,17 +445,17 @@ public class ViewPrincipal extends javax.swing.JFrame {
         });
 
         fieldNomeDB.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        fieldNomeDB.setForeground(new java.awt.Color(212, 14, 30));
-        fieldNomeDB.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(212, 14, 30), 2, true), "NOME DA BASE DE DADOS *", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11), new java.awt.Color(212, 14, 30))); // NOI18N
+        fieldNomeDB.setForeground(new java.awt.Color(83, 65, 43));
+        fieldNomeDB.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(83, 65, 43), 2, true), "NOME DA BASE DE DADOS *", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11), new java.awt.Color(83, 65, 43))); // NOI18N
 
         fieldUser.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        fieldUser.setForeground(new java.awt.Color(212, 14, 30));
-        fieldUser.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(212, 14, 30), 2, true), "USUÁRIO *", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11), new java.awt.Color(212, 14, 30))); // NOI18N
+        fieldUser.setForeground(new java.awt.Color(83, 65, 43));
+        fieldUser.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(83, 65, 43), 2, true), "USUÁRIO *", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11), new java.awt.Color(83, 65, 43))); // NOI18N
 
         fieldPassword.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        fieldPassword.setForeground(new java.awt.Color(212, 14, 30));
+        fieldPassword.setForeground(new java.awt.Color(83, 65, 43));
         fieldPassword.setText("jPasswordField1");
-        fieldPassword.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(212, 14, 30), 2, true), "SENHA", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11), new java.awt.Color(212, 14, 30))); // NOI18N
+        fieldPassword.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(83, 65, 43), 2, true), "SENHA", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11), new java.awt.Color(83, 65, 43))); // NOI18N
         fieldPassword.setCaretColor(new java.awt.Color(255, 255, 255));
         fieldPassword.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -446,9 +463,9 @@ public class ViewPrincipal extends javax.swing.JFrame {
             }
         });
 
-        btnConectar.setBackground(new java.awt.Color(212, 14, 30));
+        btnConectar.setBackground(new java.awt.Color(133, 108, 76));
         btnConectar.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
-        btnConectar.setForeground(new java.awt.Color(246, 180, 14));
+        btnConectar.setForeground(new java.awt.Color(255, 255, 255));
         btnConectar.setText("OK");
         btnConectar.setToolTipText("Botão para Conectar com o banco");
         btnConectar.setBorderPainted(false);
@@ -463,6 +480,7 @@ public class ViewPrincipal extends javax.swing.JFrame {
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/logo_1.png"))); // NOI18N
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(133, 108, 76));
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel4.setText("CONFIGURAR CONEXÃO COM A BASE DE DADOS");
 
@@ -531,7 +549,7 @@ public class ViewPrincipal extends javax.swing.JFrame {
         );
 
         dialogCadastrar.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        dialogCadastrar.setTitle("CONFIGURAR CONEXÃO");
+        dialogCadastrar.setTitle("CADASTRAR LIVRO");
         dialogCadastrar.setBackground(new java.awt.Color(255, 255, 255));
         dialogCadastrar.setMaximumSize(new java.awt.Dimension(480, 700));
         dialogCadastrar.setMinimumSize(new java.awt.Dimension(480, 700));
@@ -542,8 +560,8 @@ public class ViewPrincipal extends javax.swing.JFrame {
         panelCadastro.setBackground(new java.awt.Color(255, 255, 255));
 
         fieldGeneroCadastro.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        fieldGeneroCadastro.setForeground(new java.awt.Color(212, 14, 30));
-        fieldGeneroCadastro.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(212, 14, 30), 2, true), "GÊNERO", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11), new java.awt.Color(212, 14, 30))); // NOI18N
+        fieldGeneroCadastro.setForeground(new java.awt.Color(83, 65, 43));
+        fieldGeneroCadastro.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(83, 65, 43), 2, true), "GÊNERO", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11), new java.awt.Color(83, 65, 43))); // NOI18N
         fieldGeneroCadastro.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 fieldGeneroCadastroActionPerformed(evt);
@@ -551,8 +569,8 @@ public class ViewPrincipal extends javax.swing.JFrame {
         });
 
         fieldAnoCadastro.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        fieldAnoCadastro.setForeground(new java.awt.Color(212, 14, 30));
-        fieldAnoCadastro.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(212, 14, 30), 2, true), "ANO", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11), new java.awt.Color(212, 14, 30))); // NOI18N
+        fieldAnoCadastro.setForeground(new java.awt.Color(83, 65, 43));
+        fieldAnoCadastro.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(83, 65, 43), 2, true), "ANO", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11), new java.awt.Color(83, 65, 43))); // NOI18N
         fieldAnoCadastro.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 fieldAnoCadastroActionPerformed(evt);
@@ -560,12 +578,12 @@ public class ViewPrincipal extends javax.swing.JFrame {
         });
 
         fieldTituloCadastro.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        fieldTituloCadastro.setForeground(new java.awt.Color(212, 14, 30));
-        fieldTituloCadastro.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(212, 14, 30), 2, true), "TÍTULO", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11), new java.awt.Color(212, 14, 30))); // NOI18N
+        fieldTituloCadastro.setForeground(new java.awt.Color(83, 65, 43));
+        fieldTituloCadastro.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(83, 65, 43), 2, true), "TÍTULO", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11), new java.awt.Color(83, 65, 43))); // NOI18N
 
-        btnCadastrar.setBackground(new java.awt.Color(212, 14, 30));
+        btnCadastrar.setBackground(new java.awt.Color(133, 108, 76));
         btnCadastrar.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
-        btnCadastrar.setForeground(new java.awt.Color(246, 180, 14));
+        btnCadastrar.setForeground(new java.awt.Color(255, 255, 255));
         btnCadastrar.setText("CADASTRAR");
         btnCadastrar.setToolTipText("Botão para Conectar com o banco");
         btnCadastrar.setBorderPainted(false);
@@ -580,25 +598,31 @@ public class ViewPrincipal extends javax.swing.JFrame {
         jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/logo_1.png"))); // NOI18N
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(83, 65, 43));
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel6.setText("CADASTRAR LIVRO");
 
         fieldAutorCadastro.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        fieldAutorCadastro.setForeground(new java.awt.Color(212, 14, 30));
-        fieldAutorCadastro.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(212, 14, 30), 2, true), "AUTOR", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11), new java.awt.Color(212, 14, 30))); // NOI18N
+        fieldAutorCadastro.setForeground(new java.awt.Color(83, 65, 43));
+        fieldAutorCadastro.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(83, 65, 43), 2, true), "AUTOR", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11), new java.awt.Color(83, 65, 43))); // NOI18N
 
         textResumoCadastro.setColumns(20);
         textResumoCadastro.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        textResumoCadastro.setForeground(new java.awt.Color(212, 14, 30));
+        textResumoCadastro.setForeground(new java.awt.Color(83, 65, 43));
         textResumoCadastro.setLineWrap(true);
         textResumoCadastro.setRows(5);
         textResumoCadastro.setWrapStyleWord(true);
-        textResumoCadastro.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(212, 14, 30), 2, true), "RESUMO", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 12), new java.awt.Color(212, 14, 30))); // NOI18N
+        textResumoCadastro.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(83, 65, 43), 2, true), "RESUMO", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 12), new java.awt.Color(83, 65, 43))); // NOI18N
         jScrollPane2.setViewportView(textResumoCadastro);
 
         fieldCodigoCadastro.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        fieldCodigoCadastro.setForeground(new java.awt.Color(212, 14, 30));
-        fieldCodigoCadastro.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(212, 14, 30), 2, true), "CÓDIGO", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11), new java.awt.Color(212, 14, 30))); // NOI18N
+        fieldCodigoCadastro.setForeground(new java.awt.Color(83, 65, 43));
+        fieldCodigoCadastro.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(83, 65, 43), 2, true), "CÓDIGO", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11), new java.awt.Color(83, 65, 43))); // NOI18N
+        fieldCodigoCadastro.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                fieldCodigoCadastroKeyPressed(evt);
+            }
+        });
 
         javax.swing.GroupLayout panelCadastroLayout = new javax.swing.GroupLayout(panelCadastro);
         panelCadastro.setLayout(panelCadastroLayout);
@@ -647,9 +671,9 @@ public class ViewPrincipal extends javax.swing.JFrame {
             .addGroup(panelCadastroLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(fieldCodigoCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(fieldTituloCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -678,7 +702,7 @@ public class ViewPrincipal extends javax.swing.JFrame {
         );
 
         dialogAlterar.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        dialogAlterar.setTitle("CONFIGURAR CONEXÃO");
+        dialogAlterar.setTitle("ALTERAR LIVRO");
         dialogAlterar.setBackground(new java.awt.Color(255, 255, 255));
         dialogAlterar.setMaximumSize(new java.awt.Dimension(480, 700));
         dialogAlterar.setMinimumSize(new java.awt.Dimension(480, 700));
@@ -689,20 +713,20 @@ public class ViewPrincipal extends javax.swing.JFrame {
         panelAlterar.setBackground(new java.awt.Color(255, 255, 255));
 
         fieldGeneroAlteracao.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        fieldGeneroAlteracao.setForeground(new java.awt.Color(212, 14, 30));
-        fieldGeneroAlteracao.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(212, 14, 30), 2, true), "GÊNERO", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11), new java.awt.Color(212, 14, 30))); // NOI18N
+        fieldGeneroAlteracao.setForeground(new java.awt.Color(83, 65, 43));
+        fieldGeneroAlteracao.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(83, 65, 43), 2, true), "GÊNERO", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11), new java.awt.Color(83, 65, 43))); // NOI18N
 
         fieldAnoAlteracao.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        fieldAnoAlteracao.setForeground(new java.awt.Color(212, 14, 30));
-        fieldAnoAlteracao.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(212, 14, 30), 2, true), "ANO", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11), new java.awt.Color(212, 14, 30))); // NOI18N
+        fieldAnoAlteracao.setForeground(new java.awt.Color(83, 65, 43));
+        fieldAnoAlteracao.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(83, 65, 43), 2, true), "ANO", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11), new java.awt.Color(83, 65, 43))); // NOI18N
 
         fieldTituloAlteracao.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        fieldTituloAlteracao.setForeground(new java.awt.Color(212, 14, 30));
-        fieldTituloAlteracao.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(212, 14, 30), 2, true), "TÍTULO", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11), new java.awt.Color(212, 14, 30))); // NOI18N
+        fieldTituloAlteracao.setForeground(new java.awt.Color(83, 65, 43));
+        fieldTituloAlteracao.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(83, 65, 43), 2, true), "TÍTULO", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11), new java.awt.Color(83, 65, 43))); // NOI18N
 
-        btnAlterar.setBackground(new java.awt.Color(212, 14, 30));
+        btnAlterar.setBackground(new java.awt.Color(133, 108, 76));
         btnAlterar.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
-        btnAlterar.setForeground(new java.awt.Color(246, 180, 14));
+        btnAlterar.setForeground(new java.awt.Color(255, 255, 255));
         btnAlterar.setText("ALTERAR");
         btnAlterar.setToolTipText("Botão para Conectar com o banco");
         btnAlterar.setBorderPainted(false);
@@ -717,26 +741,27 @@ public class ViewPrincipal extends javax.swing.JFrame {
         jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/logo_1.png"))); // NOI18N
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(83, 65, 43));
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel8.setText("ALTERAR LIVRO");
 
         fieldAutorAlteracao.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        fieldAutorAlteracao.setForeground(new java.awt.Color(212, 14, 30));
-        fieldAutorAlteracao.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(212, 14, 30), 2, true), "AUTOR", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11), new java.awt.Color(212, 14, 30))); // NOI18N
+        fieldAutorAlteracao.setForeground(new java.awt.Color(83, 65, 43));
+        fieldAutorAlteracao.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(83, 65, 43), 2, true), "AUTOR", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11), new java.awt.Color(83, 65, 43))); // NOI18N
 
         textResumoAlteracao.setColumns(20);
         textResumoAlteracao.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        textResumoAlteracao.setForeground(new java.awt.Color(212, 14, 30));
+        textResumoAlteracao.setForeground(new java.awt.Color(83, 65, 43));
         textResumoAlteracao.setLineWrap(true);
         textResumoAlteracao.setRows(5);
         textResumoAlteracao.setWrapStyleWord(true);
-        textResumoAlteracao.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(212, 14, 30), 2, true), "RESUMO", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 12), new java.awt.Color(212, 14, 30))); // NOI18N
+        textResumoAlteracao.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(83, 65, 43), 2, true), "RESUMO", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 12), new java.awt.Color(83, 65, 43))); // NOI18N
         jScrollPane4.setViewportView(textResumoAlteracao);
 
         fieldCodigoAlteracao.setEditable(false);
         fieldCodigoAlteracao.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        fieldCodigoAlteracao.setForeground(new java.awt.Color(212, 14, 30));
-        fieldCodigoAlteracao.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(212, 14, 30), 2, true), "CÓDIGO", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11), new java.awt.Color(212, 14, 30))); // NOI18N
+        fieldCodigoAlteracao.setForeground(new java.awt.Color(83, 65, 43));
+        fieldCodigoAlteracao.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(83, 65, 43), 2, true), "CÓDIGO", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11), new java.awt.Color(83, 65, 43))); // NOI18N
 
         javax.swing.GroupLayout panelAlterarLayout = new javax.swing.GroupLayout(panelAlterar);
         panelAlterar.setLayout(panelAlterarLayout);
@@ -763,7 +788,7 @@ public class ViewPrincipal extends javax.swing.JFrame {
                 .addComponent(fieldAutorAlteracao)
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelAlterarLayout.createSequentialGroup()
-                .addContainerGap(136, Short.MAX_VALUE)
+                .addContainerGap(116, Short.MAX_VALUE)
                 .addGroup(panelAlterarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelAlterarLayout.createSequentialGroup()
                         .addComponent(fieldAnoAlteracao, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -785,9 +810,9 @@ public class ViewPrincipal extends javax.swing.JFrame {
             .addGroup(panelAlterarLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel7)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel8)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(fieldCodigoAlteracao, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(fieldTituloAlteracao, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -808,15 +833,21 @@ public class ViewPrincipal extends javax.swing.JFrame {
         dialogAlterar.getContentPane().setLayout(dialogAlterarLayout);
         dialogAlterarLayout.setHorizontalGroup(
             dialogAlterarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panelAlterar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(dialogAlterarLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(panelAlterar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         dialogAlterarLayout.setVerticalGroup(
             dialogAlterarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panelAlterar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(dialogAlterarLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(panelAlterar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         dialogInformacoes.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        dialogInformacoes.setTitle("CONFIGURAR CONEXÃO");
+        dialogInformacoes.setTitle("INFORMAÇÕES");
         dialogInformacoes.setAlwaysOnTop(true);
         dialogInformacoes.setBackground(new java.awt.Color(255, 255, 255));
         dialogInformacoes.setMinimumSize(new java.awt.Dimension(480, 620));
@@ -828,8 +859,8 @@ public class ViewPrincipal extends javax.swing.JFrame {
         fieldGeneroInfo.setEditable(false);
         fieldGeneroInfo.setBackground(new java.awt.Color(255, 255, 255));
         fieldGeneroInfo.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        fieldGeneroInfo.setForeground(new java.awt.Color(212, 14, 30));
-        fieldGeneroInfo.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(212, 14, 30), 2, true), "GÊNERO", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11), new java.awt.Color(212, 14, 30))); // NOI18N
+        fieldGeneroInfo.setForeground(new java.awt.Color(83, 65, 43));
+        fieldGeneroInfo.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(83, 65, 43), 2, true), "GÊNERO", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11), new java.awt.Color(83, 65, 43))); // NOI18N
         fieldGeneroInfo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 fieldGeneroInfoActionPerformed(evt);
@@ -839,8 +870,8 @@ public class ViewPrincipal extends javax.swing.JFrame {
         fieldAnoInfo.setEditable(false);
         fieldAnoInfo.setBackground(new java.awt.Color(255, 255, 255));
         fieldAnoInfo.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        fieldAnoInfo.setForeground(new java.awt.Color(212, 14, 30));
-        fieldAnoInfo.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(212, 14, 30), 2, true), "ANO", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11), new java.awt.Color(212, 14, 30))); // NOI18N
+        fieldAnoInfo.setForeground(new java.awt.Color(83, 65, 43));
+        fieldAnoInfo.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(83, 65, 43), 2, true), "ANO", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11), new java.awt.Color(83, 65, 43))); // NOI18N
         fieldAnoInfo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 fieldAnoInfoActionPerformed(evt);
@@ -850,12 +881,12 @@ public class ViewPrincipal extends javax.swing.JFrame {
         fieldTituloInfo.setEditable(false);
         fieldTituloInfo.setBackground(new java.awt.Color(255, 255, 255));
         fieldTituloInfo.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        fieldTituloInfo.setForeground(new java.awt.Color(212, 14, 30));
-        fieldTituloInfo.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(212, 14, 30), 2, true), "TÍTULO", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11), new java.awt.Color(212, 14, 30))); // NOI18N
+        fieldTituloInfo.setForeground(new java.awt.Color(83, 65, 43));
+        fieldTituloInfo.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(83, 65, 43), 2, true), "TÍTULO", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11), new java.awt.Color(83, 65, 43))); // NOI18N
 
-        btnOkInfo.setBackground(new java.awt.Color(212, 14, 30));
+        btnOkInfo.setBackground(new java.awt.Color(133, 108, 76));
         btnOkInfo.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
-        btnOkInfo.setForeground(new java.awt.Color(246, 180, 14));
+        btnOkInfo.setForeground(new java.awt.Color(255, 255, 255));
         btnOkInfo.setText("OK");
         btnOkInfo.setToolTipText("Botão para Conectar com o banco");
         btnOkInfo.setBorderPainted(false);
@@ -876,18 +907,18 @@ public class ViewPrincipal extends javax.swing.JFrame {
         fieldAutorInfo.setEditable(false);
         fieldAutorInfo.setBackground(new java.awt.Color(255, 255, 255));
         fieldAutorInfo.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        fieldAutorInfo.setForeground(new java.awt.Color(212, 14, 30));
-        fieldAutorInfo.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(212, 14, 30), 2, true), "AUTOR", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11), new java.awt.Color(212, 14, 30))); // NOI18N
+        fieldAutorInfo.setForeground(new java.awt.Color(83, 65, 43));
+        fieldAutorInfo.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(83, 65, 43), 2, true), "AUTOR", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11), new java.awt.Color(83, 65, 43))); // NOI18N
 
         textResumoInfo.setEditable(false);
         textResumoInfo.setColumns(20);
         textResumoInfo.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        textResumoInfo.setForeground(new java.awt.Color(212, 14, 30));
+        textResumoInfo.setForeground(new java.awt.Color(83, 65, 43));
         textResumoInfo.setLineWrap(true);
         textResumoInfo.setRows(5);
         textResumoInfo.setToolTipText("");
         textResumoInfo.setWrapStyleWord(true);
-        textResumoInfo.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(212, 14, 30), 2, true), "RESUMO", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 12), new java.awt.Color(212, 14, 30))); // NOI18N
+        textResumoInfo.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(83, 65, 43), 2, true), "RESUMO", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 12), new java.awt.Color(83, 65, 43))); // NOI18N
         jScrollPane5.setViewportView(textResumoInfo);
 
         javax.swing.GroupLayout panelInformacoesLayout = new javax.swing.GroupLayout(panelInformacoes);
@@ -962,7 +993,7 @@ public class ViewPrincipal extends javax.swing.JFrame {
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("MÓDULO EXCLUIR - JOGOS");
+        setTitle("BIBLIOTECA PESSOAL");
         setBackground(new java.awt.Color(255, 255, 255));
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         setFocusCycleRoot(false);
@@ -972,7 +1003,7 @@ public class ViewPrincipal extends javax.swing.JFrame {
         jPanel1.setPreferredSize(new java.awt.Dimension(960, 540));
 
         tabelaLivros.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        tabelaLivros.setForeground(new java.awt.Color(246, 180, 14));
+        tabelaLivros.setForeground(new java.awt.Color(133, 108, 76));
         tabelaLivros.setBackground(new java.awt.Color(255, 255, 255));
         tabelaLivros.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -997,9 +1028,9 @@ public class ViewPrincipal extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        tabelaLivros.setGridColor(new java.awt.Color(246, 180, 14));
+        tabelaLivros.setGridColor(new java.awt.Color(133, 108, 76));
         tabelaLivros.setRowHeight(20);
-        tabelaLivros.setSelectionBackground(new java.awt.Color(212, 14, 30));
+        tabelaLivros.setSelectionBackground(new java.awt.Color(133, 108, 76));
         tabelaLivros.setSelectionForeground(new java.awt.Color(255, 255, 255));
         tabelaLivros.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tabelaLivros.getTableHeader().setReorderingAllowed(false);
@@ -1013,9 +1044,9 @@ public class ViewPrincipal extends javax.swing.JFrame {
             tabelaLivros.getColumnModel().getColumn(4).setResizable(false);
         }
 
-        btnRestaurar.setBackground(new java.awt.Color(212, 14, 30));
+        btnRestaurar.setBackground(new java.awt.Color(133, 108, 76));
         btnRestaurar.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        btnRestaurar.setForeground(new java.awt.Color(246, 180, 14));
+        btnRestaurar.setForeground(new java.awt.Color(255, 255, 255));
         btnRestaurar.setText("RESTAURAR LIVROS");
         btnRestaurar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1027,12 +1058,12 @@ public class ViewPrincipal extends javax.swing.JFrame {
         logo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/logo.png"))); // NOI18N
 
         lblHora.setFont(new java.awt.Font("Tahoma", 1, 48)); // NOI18N
-        lblHora.setForeground(new java.awt.Color(246, 180, 14));
+        lblHora.setForeground(new java.awt.Color(83, 65, 43));
         lblHora.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
 
-        btnConexao.setBackground(new java.awt.Color(212, 14, 30));
+        btnConexao.setBackground(new java.awt.Color(133, 108, 76));
         btnConexao.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        btnConexao.setForeground(new java.awt.Color(246, 180, 14));
+        btnConexao.setForeground(new java.awt.Color(255, 255, 255));
         btnConexao.setText("CONFIGURAR CONEXÃO");
         btnConexao.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1040,9 +1071,9 @@ public class ViewPrincipal extends javax.swing.JFrame {
             }
         });
 
-        btnInformacoes.setBackground(new java.awt.Color(212, 14, 30));
+        btnInformacoes.setBackground(new java.awt.Color(133, 108, 76));
         btnInformacoes.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        btnInformacoes.setForeground(new java.awt.Color(246, 180, 14));
+        btnInformacoes.setForeground(new java.awt.Color(255, 255, 255));
         btnInformacoes.setText("VER INFORMAÇÕES");
         btnInformacoes.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1050,9 +1081,9 @@ public class ViewPrincipal extends javax.swing.JFrame {
             }
         });
 
-        btnCadastro.setBackground(new java.awt.Color(212, 14, 30));
+        btnCadastro.setBackground(new java.awt.Color(133, 108, 76));
         btnCadastro.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        btnCadastro.setForeground(new java.awt.Color(246, 180, 14));
+        btnCadastro.setForeground(new java.awt.Color(255, 255, 255));
         btnCadastro.setText("CADASTRAR LIVRO");
         btnCadastro.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1060,9 +1091,9 @@ public class ViewPrincipal extends javax.swing.JFrame {
             }
         });
 
-        btnAltera.setBackground(new java.awt.Color(212, 14, 30));
+        btnAltera.setBackground(new java.awt.Color(133, 108, 76));
         btnAltera.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        btnAltera.setForeground(new java.awt.Color(246, 180, 14));
+        btnAltera.setForeground(new java.awt.Color(255, 255, 255));
         btnAltera.setText("ALTERAR LIVRO");
         btnAltera.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1070,13 +1101,22 @@ public class ViewPrincipal extends javax.swing.JFrame {
             }
         });
 
-        btnExcluir.setBackground(new java.awt.Color(212, 14, 30));
+        btnExcluir.setBackground(new java.awt.Color(133, 108, 76));
         btnExcluir.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        btnExcluir.setForeground(new java.awt.Color(246, 180, 14));
+        btnExcluir.setForeground(new java.awt.Color(255, 255, 255));
         btnExcluir.setText("EXCLUIR LIVRO");
         btnExcluir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnExcluirActionPerformed(evt);
+            }
+        });
+
+        btnHide.setMaximumSize(new java.awt.Dimension(0, 0));
+        btnHide.setMinimumSize(new java.awt.Dimension(0, 0));
+        btnHide.setPreferredSize(new java.awt.Dimension(0, 0));
+        btnHide.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                btnHideKeyPressed(evt);
             }
         });
 
@@ -1100,10 +1140,16 @@ public class ViewPrincipal extends javax.swing.JFrame {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(logo)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblHora, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnConexao, javax.swing.GroupLayout.Alignment.TRAILING))))
+                        .addGap(129, 129, 129)
+                        .addComponent(btnHide, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(81, 81, 81)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnConexao))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(lblHora, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap())
         );
 
@@ -1116,11 +1162,16 @@ public class ViewPrincipal extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(logo)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(lblHora, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(lblHora, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(btnHide, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(65, 65, 65)))
                         .addComponent(btnConexao, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 278, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnRestaurar, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1137,9 +1188,7 @@ public class ViewPrincipal extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1034, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1044, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1243,6 +1292,33 @@ public class ViewPrincipal extends javax.swing.JFrame {
         dialogInformacoes.dispose();
     }//GEN-LAST:event_btnOkInfoActionPerformed
 
+    private void fieldCodigoCadastroKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_fieldCodigoCadastroKeyPressed
+        // TODO add your handling code here:
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER){
+            int opcao = JOptionPane.showConfirmDialog(null, "Deseja consultar o código online?", "CONSULTAR CÓDIGO", JOptionPane.YES_NO_OPTION);
+            
+            if(opcao == 0){
+                ControllerEANReader reader = new ControllerEANReader();
+                try {
+                    reader.eanReader(this);
+                }
+                catch (IOException ex) {
+                    Logger.getLogger(ViewPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+    }//GEN-LAST:event_fieldCodigoCadastroKeyPressed
+
+    private void btnHideKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btnHideKeyPressed
+        // TODO add your handling code here:
+        if (evt.getKeyCode() == KeyEvent.VK_F2){
+            int opcao = JOptionPane.showConfirmDialog(null, "Deseja inserir o token da API de consulta?", "TOKEN", JOptionPane.YES_NO_OPTION);
+            if(opcao == 0){
+                setApiToken(JOptionPane.showInputDialog("Digite o token: "));
+            }
+        }
+    }//GEN-LAST:event_btnHideKeyPressed
+
     /**
      * @param args the command line arguments
      */
@@ -1274,8 +1350,9 @@ public class ViewPrincipal extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    new ViewPrincipal().setVisible(true);
-                    
+                    ViewPrincipal view = new ViewPrincipal();
+                    view.setLocationRelativeTo(null);
+                    view.setVisible(true);
                 } catch (SQLException ex) {
                     Logger.getLogger(ViewPrincipal.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -1291,6 +1368,7 @@ public class ViewPrincipal extends javax.swing.JFrame {
     private javax.swing.JButton btnConectar;
     private javax.swing.JButton btnConexao;
     private javax.swing.JButton btnExcluir;
+    private javax.swing.JButton btnHide;
     private javax.swing.JButton btnInformacoes;
     private javax.swing.JButton btnOkInfo;
     private javax.swing.JButton btnRestaurar;

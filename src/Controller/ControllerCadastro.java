@@ -248,6 +248,7 @@ public class ControllerCadastro {
         livro.setTitulo(view.getTabelaLivrosExcluidos().getValueAt(i, 1).toString());
         
         int opcao = JOptionPane.showConfirmDialog(null, "Deseja restaurar o livro:\n\n"+livro.getTitulo().toUpperCase(), "RESTAURAR", JOptionPane.YES_NO_OPTION);
+        System.out.println(opcao);
         if(opcao == 0){
             if(cadastro.restaurar(livro)){
                 JOptionPane.showMessageDialog(null, "O livro\n\n"+livro.getTitulo().toUpperCase()+"\n\nfoi restaurado com sucesso!");

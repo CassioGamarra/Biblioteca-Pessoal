@@ -80,7 +80,7 @@ public class ControllerCadastro {
         }
         else{
             codigo = Long.parseLong(codigoString);
-            ano = Integer.parseInt(view.getFieldAnoCadastro().getText());
+            ano = Integer.parseInt(anoString);
             livro.setCodigo(codigo);
             livro.setTitulo(titulo);
             livro.setResumo(resumo);

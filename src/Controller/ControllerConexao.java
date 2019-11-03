@@ -96,11 +96,11 @@ public class ControllerConexao {
                 verificaDadosConexao(view);
                 //Tenta conectar com o banco
                 Util util = new Util();
-                util.cleanJTable(view.getTabelaJogos());
-                util.cleanJTable(view.getTabelaJogosExcluidos());
+                util.cleanJTable(view.getTabelaLivros());
+                util.cleanJTable(view.getTabelaLivrosExcluidos());
                 
                 conectar(view);
-                view.cadastro.consulta(view);
+                view.cadastro.consultarTodos(view);
             }
             catch (IOException ex) {
                 Logger.getLogger(ControllerConexao.class.getName()).log(Level.SEVERE, null, ex);
